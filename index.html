@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhishShark - URL Threat Detector</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <canvas id="matrixCanvas"></canvas>
+
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="nav-logo">🦈</span>
+            <div>
+                <div class="nav-title">PhishShark</div>
+                <div class="nav-sub">URL Threat Detection System</div>
+            </div>
+        </div>
+        <div class="nav-status">
+            <span class="status-dot"></span>
+            System Online
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-left">
+            <div class="hero-badge">🔒 AI-Powered Cyber Protection</div>
+            <h1 class="hero-title">
+                Is This URL <br>
+                <span class="blue-glow">Safe or Dangerous?</span>
+            </h1>
+            <p class="hero-desc">
+                PhishShark uses a Machine Learning model trained on 651,000+ real URLs
+                to detect phishing, malware, and scam links — before you click them.
+            </p>
+            <div class="hero-stats">
+                <div class="hstat">
+                    <div class="hstat-num">97%</div>
+                    <div class="hstat-label">Accuracy</div>
+                </div>
+                <div class="hstat-divider"></div>
+                <div class="hstat">
+                    <div class="hstat-num">&lt;1s</div>
+                    <div class="hstat-label">Scan Time</div>
+                </div>
+                <div class="hstat-divider"></div>
+                <div class="hstat">
+                    <div class="hstat-num">12</div>
+                    <div class="hstat-label">Features</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-right">
+            <div class="scan-box">
+                <div class="scan-box-title">
+                    <i class="fas fa-radar"></i>
+                    &nbsp; URL Scanner
+                </div>
+
+                <label class="input-label">Enter URL to Scan</label>
+                <div class="input-group">
+                    <i class="fas fa-link input-prefix-icon"></i>
+                    <input
+                        type="text"
+                        id="urlInput"
+                        placeholder="https://example.com/login"
+                        autocomplete="off"
+                    />
+                    <button class="clear-btn" id="clearBtn" onclick="clearInput()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <button class="scan-btn" id="scanBtn" onclick="analyzeURL()">
+                    <span id="btnText">
+                        <i class="fas fa-search"></i> &nbsp; Check URL Safety
+                    </span>
+                    <span id="btnLoading" style="display:none;">
+                        <i class="fas fa-spinner fa-spin"></i> &nbsp; Analyzing...
+                    </span>
+                </button>
+
+                <div class="scan-note">
+                    <i class="fas fa-info-circle"></i>
+                    URL is analyzed locally. Nothing is stored.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="results-section" id="resultsSection" style="display:none;">
+
+        <div class="results-inner">
+
+            <div class="verdict-card" id="verdictCard">
+                <div class="verdict-left">
+                    <div class="verdict-emoji" id="verdictEmoji"></div>
+                    <div>
+                        <div class="verdict-label" id="verdictLabel"></div>
+                        <div class="verdict-url" id="verdictURL"></div>
+                    </div>
+                </div>
+                <div class="confidence-pill" id="confidencePill"></div>
+            </div>
+
+            <div class="result-grid">
+
+                <div class="rcard" id="warningsCard" style="display:none;">
+                    <div class="rcard-title warning-title">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Warning Signs Detected
+                    </div>
+                    <ul class="rcard-list" id="warningsList"></ul>
+                </div>
+
+                <div class="rcard" id="attackCard" style="display:none;">
+                    <div class="rcard-title danger-title">
+                        <i class="fas fa-skull-crossbones"></i>
+                        Threat Classification
+                    </div>
+                    <div class="attack-pill" id="attackPill"></div>
+                    <p class="attack-desc" id="attackDesc"></p>
+                </div>
+
+            </div>
+
+            <div class="rcard advice-card" id="adviceCard">
+                <div class="rcard-title advice-title">
+                    <i class="fas fa-shield-alt"></i>
+                    Recommended Actions
+                </div>
+                <ul class="rcard-list advice-list" id="adviceList"></ul>
+            </div>
+
+            <button class="rescan-btn" onclick="resetScan()">
+                <i class="fas fa-redo"></i> &nbsp; Scan Another URL
+            </button>
+
+        </div>
+    </section>
+
+    <section class="how-section">
+        <div class="section-header">
+            <h2>How It Works</h2>
+            <p>PhishShark never visits the URL. It only analyzes the link structure.</p>
+        </div>
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-num">01</div>
+                <i class="fas fa-paste step-icon"></i>
+                <h3>Paste URL</h3>
+                <p>Copy any suspicious link and paste it into the scanner above.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-num">02</div>
+                <i class="fas fa-microchip step-icon"></i>
+                <h3>Feature Extraction</h3>
+                <p>The system extracts 12 structural features from the URL without visiting it.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-num">03</div>
+                <i class="fas fa-robot step-icon"></i>
+                <h3>ML Prediction</h3>
+                <p>A Random Forest model trained on 651K URLs classifies the threat level.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-num">04</div>
+                <i class="fas fa-file-alt step-icon"></i>
+                <h3>Full Report</h3>
+                <p>Get a plain-English explanation of the threat and what to do next.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="features-section">
+        <div class="section-header">
+            <h2>What PhishShark Detects</h2>
+            <p>12 URL characteristics analyzed in under 1 second</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-item">
+                <i class="fas fa-network-wired"></i>
+                <span>IP Address in URL</span>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-at"></i>
+                <span>@ Symbol Trick</span>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-lock-open"></i>
+                <span>Missing HTTPS</span>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-text-width"></i>
+                <span>Suspicious Keywords</span>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-minus"></i>
+                <span>Excessive Hyphens</span>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-sitemap"></i>
+                <span>Deep Subdomains</span>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-ruler-horizontal"></i>
+                <span>URL Length</span>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-hashtag"></i>
+                <span>Special Characters</span>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-brand">
+            <span>🦈</span> PhishShark
+        </div>
+        <p>Mini Project — Computer Engineering | Built with Python, Flask & Scikit-learn</p>
+        <p class="footer-note">⚠️ For educational purposes only. Do not use as sole security judgement.</p>
+    </footer>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
